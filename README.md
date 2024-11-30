@@ -4,8 +4,8 @@
 
 # Ink Canvas Reborn
 
-[直接下载](https://github.com/dubi906w/Ink-Canvas-Reborn/releases/latest "Latest Releases") | [使用指南](https://github.com/dubi906w/Ink-Canvas-Reborn/blob/master/MANUAL.md "说明和指南") | [常见问题](https://github.com/dubi906w/Ink-Canvas-Reborn#FAQ "FAQ")
-  
+[直接下载](https://github.com/dubi906w/Ink-Canvas-Reborn/releases/latest "Latest Releases") | [使用指南](https://github.com/dubi906w/Ink-Canvas-Reborn/blob/master/MANUAL.md "说明和指南") | [常见问题](https://github.com/dubi906w/Ink-Canvas-Reborn#FAQ "FAQ") | [English](./README-EN.md)
+
 [![交流群](https://img.shields.io/badge/-%E4%BA%A4%E6%B5%81%E7%BE%A4%20195404368-blue?style=flat&logo=TencentQQ)](https://qm.qq.com/q/PDfJCGLqwM)  ![GitHub issues](https://img.shields.io/github/issues/dubi906w/Ink-Canvas-Reborn?logo=github)
 
 A fantastic Ink Canvas in WPF/C#, with fantastic support for Seewo Boards.
@@ -18,12 +18,12 @@ A fantastic Ink Canvas in WPF/C#, with fantastic support for Seewo Boards.
 
 ## 👀 前言
 
-使用和分发本软件（软件名称：Ink Canvas Reborn）前，请您应当且务必知晓相关开源协议，本软件基于 https://github.com/WXRIW/Ink-Canvas 修改而成。
+使用和分发本软件（软件名称：Ink Canvas Reborn）前，请您应当且务必知晓相关开源协议，本软件基于 [WXRIW/Ink-Canvas](https://github.com/WXRIW/Ink-Canvas) 修改而成。
 
 **⚠️ 警告：** dubi906w 不对使用本软件所造成的任何损失承担责任！
 
-
 ## 🔧 特性
+
 - 对 Microsoft PowerPoint 和 WPS Office 有优化支持。
 - **笔细的一头写字，反过来粗的一头是橡皮擦。（希沃白板并不支持）**
 - 优化原版 Ink Canvas 手掌擦除墨迹的体验。
@@ -31,6 +31,7 @@ A fantastic Ink Canvas in WPF/C#, with fantastic support for Seewo Boards.
 - 完全重写 Ink Canvas 原版项目，添加众多新功能，添加 UI 交互动画，升级界面外观，同时也会修复大量问题，并优化使用逻辑与提升用户体验
 
 ## ℹ️ 提示
+
 - 提问前请先读 [FAQ](https://github.com/WXRIW/Ink-Canvas#FAQ)
 - 遇到问题请先尝试自行解决，若无法自行解决，请简单描述你的期望与现实的差异性。如果有必要，请附上复现此问题的操作步骤或错误日志¹ （可适当配图），等待回复。
 - 对新功能的有效意见和合理建议，开发者会适时回复并进行开发。Ink Canvas 并非商业性质的软件，请勿催促开发者，耐心才能让功能更少BUG、更加稳定。
