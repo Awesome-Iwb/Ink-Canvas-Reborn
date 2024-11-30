@@ -10,7 +10,7 @@
 
 ---
 
-🤓☝️ **AUV，您吉祥！** 我是地地道道的中国人，返回 **[中文版](./README.md)**
+🤓☝️ **AUV，您吉祥！** 我是地地道道的中国人，返回 **[中文版](https://github.com/dubi906w/Ink-Canvas-Reborn)**
 
 ---
 
