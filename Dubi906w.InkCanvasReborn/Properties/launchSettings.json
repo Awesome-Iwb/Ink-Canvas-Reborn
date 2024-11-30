@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "InkCanvasReborn": {
+      "commandName": "Project"
+    },
+    "InkCanvasReborn (With Console Window)": {
+      "commandName": "Project",
+      "commandLineArgs": "--console"
+    }
+  }
+}
