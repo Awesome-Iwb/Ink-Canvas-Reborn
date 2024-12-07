@@ -4,10 +4,13 @@
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
-    <ActiveDebugProfile>InkCanvasReborn</ActiveDebugProfile>
+    <ActiveDebugProfile>InkCanvasReborn (With Console Window)</ActiveDebugProfile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="MainWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\IcrToolbarView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -21,6 +24,15 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resources\Dictionaries\FluentIconsDictionary.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resources\Dictionaries\IcrToolbarStyles.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\IcrToolbarView.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

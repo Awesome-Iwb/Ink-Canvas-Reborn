@@ -6,9 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using CommunityToolkit.Mvvm.Messaging;
+using Dubi906w.InkCanvasReborn.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Dubi906w.InkCanvasReborn {
     public partial class App : Application {
@@ -36,6 +39,7 @@ namespace Dubi906w.InkCanvasReborn {
                 })
                 .ConfigureServices((context, collection) => {
                     collection.AddSingleton<MainWindow>();
+                    collection.AddSingleton<EdgeGesturesBlockerService>();
                 })
                 .Build();
 
@@ -44,6 +48,10 @@ namespace Dubi906w.InkCanvasReborn {
 
             // 显示 MainWindow
             AppHost.Services.GetService<MainWindow>().Show();
+
+            // 启动 EdgeGesturesBlocker
+            AppHost.Services.GetService<EdgeGesturesBlockerService>().InitEdgeGesturesBlockerService();
+            WeakReferenceMessenger.Default.Send(new EnableEdgeGesturesBlockerMessage());
 
         }
     }
