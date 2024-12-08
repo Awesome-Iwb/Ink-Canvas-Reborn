@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Dubi906w.InkCanvasReborn.Interfaces;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Dubi906w.InkCanvasReborn.Interfaces;
 
 namespace Dubi906w.InkCanvasReborn.Models.Toolbar {
+
     public class ToolbarBasicButton : IToolbarItem {
         private DrawingImage _icon;
         private string _name = "Empty Name";
@@ -18,7 +14,7 @@ namespace Dubi906w.InkCanvasReborn.Models.Toolbar {
         public string Name {
             get => _name;
             set {
-                if (_name!=value) {
+                if (_name != value) {
                     _name = value;
                     Element = CreateButtonElement(Name, Icon, Command);
                 }
@@ -28,11 +24,10 @@ namespace Dubi906w.InkCanvasReborn.Models.Toolbar {
         public DrawingImage Icon {
             get => _icon;
             set {
-                if (_icon==null||!_icon.Equals(value)) {
+                if (_icon == null || !_icon.Equals(value)) {
                     _icon = value;
                     Element = CreateButtonElement(Name, Icon, Command);
                 }
-                
             }
         }
 

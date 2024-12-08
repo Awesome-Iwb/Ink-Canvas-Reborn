@@ -1,29 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Dubi906w.InkCanvasReborn.Helpers;
 using Dubi906w.InkCanvasReborn.Interfaces;
 using Dubi906w.InkCanvasReborn.Models.Toolbar;
 using Dubi906w.InkCanvasReborn.Views;
+using System;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Dubi906w.InkCanvasReborn.ViewModels {
+
     public partial class IcrToolbarViewModel : ObservableObject {
 
         /// <summary>
         /// 在默认模式下的工具栏图标
         /// </summary>
-        public ObservableCollection<IToolbarItem> ToolbarDefaultModeItems { get; set; } = new ();
+        public ObservableCollection<IToolbarItem> ToolbarDefaultModeItems { get; set; } = new();
 
         private bool _canClearCanvas = true;
 
         [ObservableProperty]
-        public double scalingFactor = 1.0;
+        private double scalingFactor = 1.35;
 
         /// <summary>
         /// 图标字典，用于工具栏按钮的图标显示
@@ -48,7 +49,7 @@ namespace Dubi906w.InkCanvasReborn.ViewModels {
         [RelayCommand(CanExecute = nameof(CanClearCanvas))]
         private void ClearCanvas() {
             //MessageBox.Show("ClearCanvas!");
-            ScalingFactor = 1.25;
+            ScalingFactor = 1.5;
         }
 
         public bool CanClearCanvas() {
@@ -56,12 +57,69 @@ namespace Dubi906w.InkCanvasReborn.ViewModels {
         }
 
         public IcrToolbarViewModel() {
-            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("批注",iconsDictionary["PenIconToolbar"] as DrawingImage, SwitchToInkModeCommand));
-            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("清屏",iconsDictionary["ClearIconToolbar"] as DrawingImage, ClearCanvasCommand));
-            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("截图",iconsDictionary["ScreenshotIconToolbar"] as DrawingImage));
-            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("白板",iconsDictionary["WhiteboardModeIconToolbar"] as DrawingImage));
-            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("快捷面板",iconsDictionary["QuickPanelIconToolbar"] as DrawingImage));
-            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("设置",iconsDictionary["SettingsIconToolbar"] as DrawingImage));
+            _emojiIconImageSource = iconsDictionary["EmojiIconToolbar"] as DrawingImage;
+
+            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("批注", iconsDictionary["PenIconToolbar"] as DrawingImage, SwitchToInkModeCommand));
+            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("清屏", iconsDictionary["ClearIconToolbar"] as DrawingImage, ClearCanvasCommand));
+            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("截图", iconsDictionary["ScreenshotIconToolbar"] as DrawingImage));
+            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("白板", iconsDictionary["WhiteboardModeIconToolbar"] as DrawingImage));
+            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("快捷面板", iconsDictionary["QuickPanelIconToolbar"] as DrawingImage));
+            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("设置", iconsDictionary["SettingsIconToolbar"] as DrawingImage));
         }
+
+        #region 笑脸按钮
+
+        [ObservableProperty]
+        private ImageSource _emojiIconImageSource;
+
+        private Point _mouseDownPoint;
+        private Point _mouseDownDeltaPoint;
+        private Point _mouseMovePoint;
+        private bool _isEmojiBtnMouseDown = false;   // 判断鼠标是否被按下
+        private readonly double _dpiVal = DpiUtilities.GetWPFDPIScaling();
+        private bool _isEmojiIconTriggerMoving = false;  // 是否触发了工具栏的移动
+
+        [RelayCommand]
+        private void EmojiButtonMouseDown(MouseButtonEventArgs e) {
+            if (_isEmojiBtnMouseDown) return;
+            EmojiIconImageSource = iconsDictionary["Emoji2IconToolbar"] as DrawingImage;
+            _mouseDownPoint = ((Visual)e.Source).PointToScreen(e.GetPosition((Border)e.Source));
+            var borderLtPoint = ((Border)e.Source).PointToScreen(new Point(0, 0));
+            _mouseDownDeltaPoint = new Point(_mouseDownPoint.X - borderLtPoint.X, _mouseDownPoint.Y - borderLtPoint.Y);
+            var border = e.Source as Border;
+            border.CaptureMouse();
+            _isEmojiBtnMouseDown = true;
+            _isEmojiIconTriggerMoving = false;
+        }
+
+        [RelayCommand]
+        private void EmojiButtonMouseMove(MouseEventArgs e) {
+            if (!_isEmojiBtnMouseDown) return;
+            _mouseMovePoint = ((Visual)e.Source).PointToScreen(e.GetPosition((Border)e.Source));
+            if (Math.Sqrt(Math.Pow(Math.Abs(_mouseDownPoint.X - _mouseMovePoint.X), 2) +
+                          Math.Pow(Math.Abs(_mouseDownPoint.Y - _mouseMovePoint.Y), 2)) >= 16)
+                _isEmojiIconTriggerMoving = true;
+            if (_isEmojiIconTriggerMoving)
+                WeakReferenceMessenger.Default.Send(new MoveToolbarWindowMessage() {
+                    X = _mouseMovePoint.X / _dpiVal - _mouseDownDeltaPoint.X / _dpiVal,
+                    Y = _mouseMovePoint.Y / _dpiVal - _mouseDownDeltaPoint.Y / _dpiVal
+                });
+        }
+
+        [RelayCommand]
+        private void EmojiButtonMouseUp(MouseButtonEventArgs e) {
+            if (!_isEmojiBtnMouseDown) return;
+            EmojiIconImageSource = iconsDictionary["EmojiIconToolbar"] as DrawingImage;
+            var border = e.Source as Border;
+            border.ReleaseMouseCapture();
+            _isEmojiBtnMouseDown = false;
+            if (_isEmojiIconTriggerMoving == false)
+                WeakReferenceMessenger.Default.Send(new ChangeToolbarVisibilityMessage() {
+                    IsSwitch = true
+                });
+            _isEmojiIconTriggerMoving = false;
+        }
+
+        #endregion 笑脸按钮
     }
 }

@@ -1,38 +1,60 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
-    <OutputType>Exe</OutputType>
-    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <IsPublishable>False</IsPublishable>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <StartupObject>Dubi906w.InkCanvasReborn.Program</StartupObject>
-    <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
-    <UseWPF>true</UseWPF>
-    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+	<TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
+	<OutputType>Exe</OutputType>
+	<GenerateAssemblyInfo>True</GenerateAssemblyInfo>
+	<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	<PlatformTarget>AnyCPU</PlatformTarget>
+	<IsPublishable>False</IsPublishable>
+	<ApplicationManifest>app.manifest</ApplicationManifest>
+	<StartupObject>Dubi906w.InkCanvasReborn.Program</StartupObject>
+	<AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+	<UseWPF>true</UseWPF>
+	<UseWindowsForms>true</UseWindowsForms>
+	<SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+	<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+	<ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+	<ApplicationVisualStyles>true</ApplicationVisualStyles>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	<Deterministic>False</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	<Deterministic>False</Deterministic>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="App.xaml" />
+	<None Remove="App.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Colorful.Console" Version="1.2.15" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.9" />
+	<PackageReference Include="Colorful.Console" Version="1.2.15" />
+	<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+	<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+	<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+	<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.9" />
+	<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+	<Page Include="App.xaml">
+	  <Generator>MSBuild:Compile</Generator>
+	</Page>
   </ItemGroup>
   <ItemGroup>
-    <None Update="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
+	<None Update="MainWindow.xaml">
+	  <Generator>MSBuild:Compile</Generator>
+	</None>
+	<None Update="Properties\Settings.settings">
+	  <Generator>SettingsSingleFileGenerator</Generator>
+	  <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	</None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Windows\" />
+	<Folder Include="Windows\" />
+  </ItemGroup>
+  <ItemGroup>
+	<Compile Update="Properties\Settings.Designer.cs">
+	  <DesignTimeSharedInput>True</DesignTimeSharedInput>
+	  <AutoGen>True</AutoGen>
+	  <DependentUpon>Settings.settings</DependentUpon>
+	</Compile>
   </ItemGroup>
 </Project>

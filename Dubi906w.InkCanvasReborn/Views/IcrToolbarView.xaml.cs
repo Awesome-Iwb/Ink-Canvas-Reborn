@@ -1,28 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using Dubi906w.InkCanvasReborn.ViewModels;
+using System;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace Dubi906w.InkCanvasReborn.Views {
-    public partial class IcrToolbarView : UserControl {
 
+    public partial class IcrToolbarView : UserControl {
         public IcrToolbarViewModel ViewModel { get; }
+
+        private bool _isToolbarBtnsVisible = true;
 
         public IcrToolbarView() {
             InitializeComponent();
 
             DataContext = new IcrToolbarViewModel();
+
+            WeakReferenceMessenger.Default.Register<ChangeToolbarVisibilityMessage>(this, (r, m) => {
+                _isToolbarBtnsVisible = m.IsSwitch ? !_isToolbarBtnsVisible : m.IsVisible;
+                ToolbarBtnsBorder.RenderTransform.BeginAnimation(ScaleTransform.ScaleXProperty, new DoubleAnimation(_isToolbarBtnsVisible ? 1 : 0, TimeSpan.FromMilliseconds(m.IsAnimated ? 100 : 0)) {
+                    EasingFunction = new PowerEase() { Power = 4, EasingMode = EasingMode.EaseOut },
+                });
+                ToolbarBtnsBorder.BeginAnimation(OpacityProperty, new DoubleAnimation(_isToolbarBtnsVisible ? 1 : 0, TimeSpan.FromMilliseconds(m.IsAnimated ? 100 : 0)));
+            });
         }
+    }
+
+    public class ChangeToolbarVisibilityMessage {
+        public bool IsVisible = true;
+        public bool IsSwitch = false;
+        public bool IsAnimated = true;
     }
 }
