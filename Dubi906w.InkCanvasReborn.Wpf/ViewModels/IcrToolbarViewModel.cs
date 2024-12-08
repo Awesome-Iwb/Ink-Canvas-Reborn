@@ -1,18 +1,18 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Dubi906w.InkCanvasReborn.Helpers;
-using Dubi906w.InkCanvasReborn.Interfaces;
-using Dubi906w.InkCanvasReborn.Models.Toolbar;
-using Dubi906w.InkCanvasReborn.Views;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Dubi906w.InkCanvasReborn.Wpf.Helpers;
+using Dubi906w.InkCanvasReborn.Wpf.Interfaces;
+using Dubi906w.InkCanvasReborn.Wpf.Models.Toolbar;
+using Dubi906w.InkCanvasReborn.Wpf.Views;
 
-namespace Dubi906w.InkCanvasReborn.ViewModels {
+namespace Dubi906w.InkCanvasReborn.Wpf.ViewModels {
 
     public partial class IcrToolbarViewModel : ObservableObject {
 

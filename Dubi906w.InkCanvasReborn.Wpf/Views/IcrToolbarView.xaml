@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="Dubi906w.InkCanvasReborn.Views.IcrToolbarView"
+﻿<UserControl x:Class="Dubi906w.InkCanvasReborn.Wpf.Views.IcrToolbarView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:localVm="clr-namespace:Dubi906w.InkCanvasReborn.ViewModels"
+             xmlns:localVm="clr-namespace:Dubi906w.InkCanvasReborn.Wpf.ViewModels"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance localVm:IcrToolbarViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>

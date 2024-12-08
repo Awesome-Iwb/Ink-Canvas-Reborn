@@ -1,4 +1,0 @@
-﻿[*.cs]
-
-# WFAC010: 不支持的高 DPI 配置
-dotnet_diagnostic.WFAC010.severity = silent

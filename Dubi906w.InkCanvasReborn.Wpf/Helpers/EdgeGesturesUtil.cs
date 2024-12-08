@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Dubi906w.InkCanvasReborn.Helpers {
+namespace Dubi906w.InkCanvasReborn.Wpf.Helpers {
 
     /// <summary>
     /// 边缘手势的禁用，来自icc。

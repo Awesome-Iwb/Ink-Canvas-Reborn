@@ -1,10 +1,10 @@
-﻿using Dubi906w.InkCanvasReborn.Interfaces;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Dubi906w.InkCanvasReborn.Wpf.Interfaces;
 
-namespace Dubi906w.InkCanvasReborn.Models.Toolbar {
+namespace Dubi906w.InkCanvasReborn.Wpf.Models.Toolbar {
 
     public class ToolbarBasicButton : IToolbarItem {
         private DrawingImage _icon;

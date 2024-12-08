@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 
-namespace Dubi906w.InkCanvasReborn.Helpers {
+namespace Dubi906w.InkCanvasReborn.Wpf.Helpers {
 
     public static class DpiUtilities {
 

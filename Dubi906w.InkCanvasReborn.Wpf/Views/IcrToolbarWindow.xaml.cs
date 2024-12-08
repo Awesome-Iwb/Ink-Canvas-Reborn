@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using System.Windows;
 
-namespace Dubi906w.InkCanvasReborn.Views {
+namespace Dubi906w.InkCanvasReborn.Wpf.Views {
 
     /// <summary>
     /// IcrToolbarWindow.xaml 的交互逻辑

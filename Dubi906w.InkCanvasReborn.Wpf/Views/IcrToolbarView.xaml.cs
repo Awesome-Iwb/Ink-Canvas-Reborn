@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
-using Dubi906w.InkCanvasReborn.ViewModels;
 using System;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Dubi906w.InkCanvasReborn.Wpf.ViewModels;
 
-namespace Dubi906w.InkCanvasReborn.Views {
+namespace Dubi906w.InkCanvasReborn.Wpf.Views {
 
     public partial class IcrToolbarView : UserControl {
         public IcrToolbarViewModel ViewModel { get; }

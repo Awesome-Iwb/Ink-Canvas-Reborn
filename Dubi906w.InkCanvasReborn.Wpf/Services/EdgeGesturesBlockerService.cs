@@ -5,8 +5,9 @@ using System;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
+using Dubi906w.InkCanvasReborn.Wpf.Helpers;
 
-namespace Dubi906w.InkCanvasReborn.Services {
+namespace Dubi906w.InkCanvasReborn.Wpf.Services {
 
     public class EdgeGesturesBlockerService {
         private Window egbWin = new Window();
@@ -32,11 +33,11 @@ namespace Dubi906w.InkCanvasReborn.Services {
             logger.Log(LogLevel.Information, "EdgeGesturesBlockerService Created.");
 
             WeakReferenceMessenger.Default.Register<EnableEdgeGesturesBlockerMessage>(this, (r, m) => {
-                Helpers.EdgeGesturesUtil.DisableEdgeGestures(new WindowInteropHelper(egbWin).Handle, true);
+                EdgeGesturesUtil.DisableEdgeGestures(new WindowInteropHelper(egbWin).Handle, true);
                 logger.Log(LogLevel.Information, "EnableEdgeGesturesBlockerMessage Received.");
             });
             WeakReferenceMessenger.Default.Register<DisableEdgeGesturesBlockerMessage>(this, (r, m) => {
-                Helpers.EdgeGesturesUtil.DisableEdgeGestures(new WindowInteropHelper(egbWin).Handle, false);
+                EdgeGesturesUtil.DisableEdgeGestures(new WindowInteropHelper(egbWin).Handle, false);
                 logger.Log(LogLevel.Information, "DisableEdgeGesturesBlockerMessage Received.");
             });
         }

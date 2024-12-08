@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
-using Dubi906w.InkCanvasReborn.Services;
-using Dubi906w.InkCanvasReborn.Views;
+using Dubi906w.InkCanvasReborn.Wpf.Services;
+using Dubi906w.InkCanvasReborn.Wpf.Views;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 
-namespace Dubi906w.InkCanvasReborn {
+namespace Dubi906w.InkCanvasReborn.Wpf {
 
     public partial class App : Application {
         public static IHost AppHost;
@@ -24,7 +24,7 @@ namespace Dubi906w.InkCanvasReborn {
             AppHost = Host.CreateDefaultBuilder()
                 .UseContentRoot(AppContext.BaseDirectory)
                 .ConfigureAppConfiguration((context, builder) => {
-                    builder.AddCommandLine(Program.Args);
+                    builder.AddCommandLine(Environment.GetCommandLineArgs());
                     builder.AddJsonFile("icr.json", false, true);
                     builder.AddInMemoryCollection(new[] {
                         new KeyValuePair<string, string>("instanceID", Guid.NewGuid().ToString())
