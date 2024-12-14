@@ -4,8 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Windows;
+using System.Windows.Interop;
 using Dubi906w.InkCanvasReborn.Wpf.Helpers;
 using Dubi906w.InkCanvasReborn.Wpf.Services;
+using WindowsDesktop;
+using Rect = System.Windows.Rect;
 
 namespace Dubi906w.InkCanvasReborn.Wpf.Views {
 
@@ -76,6 +79,10 @@ namespace Dubi906w.InkCanvasReborn.Wpf.Views {
             } else {
                 Left = left;
             }
+        }
+
+        private void OnContentRendered(object sender, EventArgs e) {
+            VirtualDesktop.PinWindow(new WindowInteropHelper(this).Handle);
         }
     }
 
