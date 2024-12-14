@@ -16,7 +16,6 @@ using Dubi906w.InkCanvasReborn.Wpf.Views;
 using Microsoft.Extensions.Logging;
 
 namespace Dubi906w.InkCanvasReborn.Wpf.ViewModels {
-
     public partial class IcrToolbarViewModel : ObservableObject {
         private readonly ILoggerFactory? loggerFactory;
         private readonly SettingsService? settings;
@@ -29,8 +28,9 @@ namespace Dubi906w.InkCanvasReborn.Wpf.ViewModels {
 
         private bool _canClearCanvas = true;
 
-        [ObservableProperty]
-        private double scalingFactor = 1.35;
+        [ObservableProperty] private double scalingFactor = 1.35;
+
+        [ObservableProperty] private bool? strictInWorkArea = false;
 
         /// <summary>
         /// 图标字典，用于工具栏按钮的图标显示
@@ -54,7 +54,7 @@ namespace Dubi906w.InkCanvasReborn.Wpf.ViewModels {
         /// </summary>
         [RelayCommand(CanExecute = nameof(CanClearCanvas))]
         private void ClearCanvas() {
-            settings.Settings.ToolbarZoom = 1D;
+            settings.Settings.IsToolbarStrictInWorkArea = !settings.Settings.IsToolbarStrictInWorkArea;
         }
 
         public bool CanClearCanvas() {
@@ -62,10 +62,16 @@ namespace Dubi906w.InkCanvasReborn.Wpf.ViewModels {
         }
 
         private void InitSettings() {
+            if (settings == null) return;
+
             ScalingFactor = 1.35 * settings.Settings.ToolbarZoom;
+            StrictInWorkArea = settings.Settings.IsToolbarStrictInWorkArea;
+
             settings.Settings.PropertyChanged += (sender, args) => {
-                if (args.PropertyName == "ToolbarZoom")
+                if (args.PropertyName == nameof(settings.Settings.ToolbarZoom))
                     ScalingFactor = settings.Settings.ToolbarZoom;
+                if (args.PropertyName == nameof(settings.Settings.IsToolbarStrictInWorkArea))
+                    StrictInWorkArea = settings.Settings.IsToolbarStrictInWorkArea;
             };
         }
 
@@ -81,25 +87,30 @@ namespace Dubi906w.InkCanvasReborn.Wpf.ViewModels {
 
             _emojiIconImageSource = iconsDictionary["EmojiIconToolbar"] as DrawingImage;
 
-            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("批注", iconsDictionary["PenIconToolbar"] as DrawingImage, SwitchToInkModeCommand));
-            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("清屏", iconsDictionary["ClearIconToolbar"] as DrawingImage, ClearCanvasCommand));
-            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("截图", iconsDictionary["ScreenshotIconToolbar"] as DrawingImage));
-            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("白板", iconsDictionary["WhiteboardModeIconToolbar"] as DrawingImage));
-            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("快捷面板", iconsDictionary["QuickPanelIconToolbar"] as DrawingImage));
-            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("设置", iconsDictionary["SettingsIconToolbar"] as DrawingImage));
+            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("批注", iconsDictionary["PenIconToolbar"] as DrawingImage,
+                SwitchToInkModeCommand));
+            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("清屏",
+                iconsDictionary["ClearIconToolbar"] as DrawingImage, ClearCanvasCommand));
+            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("截图",
+                iconsDictionary["ScreenshotIconToolbar"] as DrawingImage));
+            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("白板",
+                iconsDictionary["WhiteboardModeIconToolbar"] as DrawingImage));
+            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("快捷面板",
+                iconsDictionary["QuickPanelIconToolbar"] as DrawingImage));
+            ToolbarDefaultModeItems.Add(new ToolbarBasicButton("设置",
+                iconsDictionary["SettingsIconToolbar"] as DrawingImage));
         }
 
         #region 笑脸按钮
 
-        [ObservableProperty]
-        private ImageSource _emojiIconImageSource;
+        [ObservableProperty] private ImageSource _emojiIconImageSource;
 
         private Point _mouseDownPoint;
         private Point _mouseDownDeltaPoint;
         private Point _mouseMovePoint;
-        private bool _isEmojiBtnMouseDown = false;   // 判断鼠标是否被按下
+        private bool _isEmojiBtnMouseDown = false; // 判断鼠标是否被按下
         private readonly double _dpiVal = DpiUtilities.GetWPFDPIScaling();
-        private bool _isEmojiIconTriggerMoving = false;  // 是否触发了工具栏的移动
+        private bool _isEmojiIconTriggerMoving = false; // 是否触发了工具栏的移动
 
         [RelayCommand]
         private void EmojiButtonMouseDown(MouseButtonEventArgs e) {

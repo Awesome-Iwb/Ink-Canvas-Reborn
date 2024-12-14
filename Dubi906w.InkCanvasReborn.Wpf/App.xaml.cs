@@ -38,7 +38,7 @@ namespace Dubi906w.InkCanvasReborn.Wpf {
                     collection.AddSingleton<EdgeGesturesBlockerService>();
 
                     collection.AddSingleton(provider => {
-                        var w = new IcrToolbarWindow {
+                        var w = new IcrToolbarWindow(provider.GetService<SettingsService>()) {
                             Content = new Grid() {
                                 Children = {
                                     new IcrToolbarView(provider.GetService<ILoggerFactory>(),
