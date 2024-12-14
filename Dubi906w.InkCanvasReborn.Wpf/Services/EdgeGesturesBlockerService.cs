@@ -10,12 +10,23 @@ using Dubi906w.InkCanvasReborn.Wpf.Helpers;
 namespace Dubi906w.InkCanvasReborn.Wpf.Services {
 
     public class EdgeGesturesBlockerService {
-        private Window egbWin = new Window();
+        private readonly Window egbWin = new();
 
-        private ILoggerFactory loggerFactory = App.AppHost.Services.GetService<ILoggerFactory>();
-        private ILogger logger;
+        private readonly ILoggerFactory? loggerFactory;
+        private ILogger? logger;
+        private readonly SettingsService? settings;
 
-        public void InitEdgeGesturesBlockerService() {
+        public EdgeGesturesBlockerService(ILoggerFactory? factory, SettingsService? settings) {
+            loggerFactory = factory;
+            this.settings = settings;
+
+            // create logger
+            logger = loggerFactory?.CreateLogger<EdgeGesturesBlockerService>();
+            logger?.Log(LogLevel.Information, "EdgeGesturesBlockerService Created.");
+        }
+
+        public EdgeGesturesBlockerService InitEdgeGesturesBlockerService() {
+            logger?.Log(LogLevel.Information, $"配置文件中：enableEdgeGesturesBlocker 为 {settings?.Settings.IsEnableEdgeGesturesBlocker}");
             // create window
             egbWin.AllowsTransparency = true;
             egbWin.ResizeMode = ResizeMode.NoResize;
@@ -23,27 +34,24 @@ namespace Dubi906w.InkCanvasReborn.Wpf.Services {
             egbWin.Topmost = true;
             egbWin.Width = 2;
             egbWin.Height = 2;
-            egbWin.Background = Brushes.Red;
+            egbWin.Background = Brushes.Transparent;
             egbWin.Left = 0;
             egbWin.Top = 0;
             egbWin.Show();
 
-            // create logger
-            logger = loggerFactory.CreateLogger<EdgeGesturesBlockerService>();
-            logger.Log(LogLevel.Information, "EdgeGesturesBlockerService Created.");
+            return this;
+        }
 
-            WeakReferenceMessenger.Default.Register<EnableEdgeGesturesBlockerMessage>(this, (r, m) => {
-                EdgeGesturesUtil.DisableEdgeGestures(new WindowInteropHelper(egbWin).Handle, true);
-                logger.Log(LogLevel.Information, "EnableEdgeGesturesBlockerMessage Received.");
-            });
-            WeakReferenceMessenger.Default.Register<DisableEdgeGesturesBlockerMessage>(this, (r, m) => {
-                EdgeGesturesUtil.DisableEdgeGestures(new WindowInteropHelper(egbWin).Handle, false);
-                logger.Log(LogLevel.Information, "DisableEdgeGesturesBlockerMessage Received.");
-            });
+        public EdgeGesturesBlockerService EnableEdgeGesturesBlocker() {
+            EdgeGesturesUtil.DisableEdgeGestures(new WindowInteropHelper(egbWin).Handle, true);
+            logger?.Log(LogLevel.Information, "EnableEdgeGesturesBlockerMessage Received.");
+            return this;
+        }
+
+        public EdgeGesturesBlockerService DisableEdgeGesturesBlocker() {
+            EdgeGesturesUtil.DisableEdgeGestures(new WindowInteropHelper(egbWin).Handle, false);
+            logger?.Log(LogLevel.Information, "DisableEdgeGesturesBlockerMessage Received.");
+            return this;
         }
     }
-
-    public class DisableEdgeGesturesBlockerMessage { }
-
-    public class EnableEdgeGesturesBlockerMessage { }
 }

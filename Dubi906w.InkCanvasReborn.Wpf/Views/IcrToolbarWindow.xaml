@@ -5,8 +5,4 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Dubi906w.InkCanvasReborn.Wpf.Views"
         mc:Ignorable="d" Title="IcrToolbarWindow" SizeToContent="WidthAndHeight"
-        WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent">
-    <Grid>
-        <local:IcrToolbarView x:Name="IcrToolbarView" />
-    </Grid>
-</Window>
+        WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" />

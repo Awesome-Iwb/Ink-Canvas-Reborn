@@ -8,6 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using Dubi906w.InkCanvasReborn.Wpf.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace Dubi906w.InkCanvasReborn.Wpf {
 
@@ -22,29 +26,40 @@ namespace Dubi906w.InkCanvasReborn.Wpf {
 
             // 创建 Host
             AppHost = Host.CreateDefaultBuilder()
-                .UseContentRoot(AppContext.BaseDirectory)
                 .ConfigureAppConfiguration((context, builder) => {
                     builder.AddCommandLine(Environment.GetCommandLineArgs());
-                    builder.AddJsonFile("icr.json", false, true);
                     builder.AddInMemoryCollection(new[] {
                         new KeyValuePair<string, string>("instanceID", Guid.NewGuid().ToString())
                     });
                 })
                 .ConfigureServices((context, collection) => {
-                    collection.AddSingleton<IcrToolbarWindow>();
+                    collection.AddSingleton<GCTimer>();
+                    collection.AddSingleton<SettingsService>();
                     collection.AddSingleton<EdgeGesturesBlockerService>();
+
+                    collection.AddSingleton(provider => {
+                        var w = new IcrToolbarWindow {
+                            Content = new Grid() {
+                                Children = {
+                                    new IcrToolbarView(provider.GetService<ILoggerFactory>(),
+                                        provider.GetService<SettingsService>())
+                                }
+                            }
+                        };
+                        return w;
+                    });
                 })
                 .Build();
 
             // 启动
             AppHost.Start();
 
-            // 显示 IcrToolbarWindow
-            AppHost.Services.GetService<IcrToolbarWindow>().Show();
-
-            // 启动 EdgeGesturesBlocker
-            AppHost.Services.GetService<EdgeGesturesBlockerService>().InitEdgeGesturesBlockerService();
-            WeakReferenceMessenger.Default.Send(new EnableEdgeGesturesBlockerMessage());
+            AppHost.Services.GetService<GCTimer>()?.SetTimer();
+            AppHost.Services.GetService<EdgeGesturesBlockerService>()
+                ?.InitEdgeGesturesBlockerService()
+                ?.EnableEdgeGesturesBlocker();
+            AppHost.Services.GetService<SettingsService>()?.LoadSettings();
+            AppHost.Services.GetService<IcrToolbarWindow>()?.Show();
         }
     }
 }

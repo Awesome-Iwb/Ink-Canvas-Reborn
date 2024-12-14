@@ -4,18 +4,19 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Dubi906w.InkCanvasReborn.Wpf.ViewModels;
+using Dubi906w.InkCanvasReborn.Wpf.Services;
+using Microsoft.Extensions.Logging;
 
 namespace Dubi906w.InkCanvasReborn.Wpf.Views {
 
     public partial class IcrToolbarView : UserControl {
-        public IcrToolbarViewModel ViewModel { get; }
-
         private bool _isToolbarBtnsVisible = true;
 
-        public IcrToolbarView() {
+        public IcrToolbarView(ILoggerFactory? factory, SettingsService? settings) {
             InitializeComponent();
 
-            DataContext = new IcrToolbarViewModel();
+            if (factory is not null && settings is not null)
+                DataContext = new IcrToolbarViewModel(factory, settings);
 
             WeakReferenceMessenger.Default.Register<ChangeToolbarVisibilityMessage>(this, (r, m) => {
                 _isToolbarBtnsVisible = m.IsSwitch ? !_isToolbarBtnsVisible : m.IsVisible;

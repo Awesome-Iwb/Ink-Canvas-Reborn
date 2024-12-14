@@ -9,12 +9,18 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Dubi906w.InkCanvasReborn.Wpf.Helpers;
 using Dubi906w.InkCanvasReborn.Wpf.Interfaces;
+using Dubi906w.InkCanvasReborn.Wpf.Models;
 using Dubi906w.InkCanvasReborn.Wpf.Models.Toolbar;
+using Dubi906w.InkCanvasReborn.Wpf.Services;
 using Dubi906w.InkCanvasReborn.Wpf.Views;
+using Microsoft.Extensions.Logging;
 
 namespace Dubi906w.InkCanvasReborn.Wpf.ViewModels {
 
     public partial class IcrToolbarViewModel : ObservableObject {
+        private readonly ILoggerFactory? loggerFactory;
+        private readonly SettingsService? settings;
+        private ILogger? logger;
 
         /// <summary>
         /// 在默认模式下的工具栏图标
@@ -48,15 +54,31 @@ namespace Dubi906w.InkCanvasReborn.Wpf.ViewModels {
         /// </summary>
         [RelayCommand(CanExecute = nameof(CanClearCanvas))]
         private void ClearCanvas() {
-            //MessageBox.Show("ClearCanvas!");
-            ScalingFactor = 1.5;
+            settings.Settings.ToolbarZoom = 1D;
         }
 
         public bool CanClearCanvas() {
             return _canClearCanvas;
         }
 
-        public IcrToolbarViewModel() {
+        private void InitSettings() {
+            ScalingFactor = 1.35 * settings.Settings.ToolbarZoom;
+            settings.Settings.PropertyChanged += (sender, args) => {
+                if (args.PropertyName == "ToolbarZoom")
+                    ScalingFactor = settings.Settings.ToolbarZoom;
+            };
+        }
+
+        public IcrToolbarViewModel(ILoggerFactory factory, SettingsService settings) {
+            loggerFactory = factory;
+            this.settings = settings;
+
+            // create logger
+            logger = loggerFactory?.CreateLogger<IcrToolbarViewModel>();
+            logger?.Log(LogLevel.Information, "IcrToolbarViewModel Created.");
+
+            InitSettings();
+
             _emojiIconImageSource = iconsDictionary["EmojiIconToolbar"] as DrawingImage;
 
             ToolbarDefaultModeItems.Add(new ToolbarBasicButton("批注", iconsDictionary["PenIconToolbar"] as DrawingImage, SwitchToInkModeCommand));
