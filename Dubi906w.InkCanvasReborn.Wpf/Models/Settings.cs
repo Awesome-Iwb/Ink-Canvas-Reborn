@@ -9,11 +9,17 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Dubi906w.InkCanvasReborn.Wpf.Models {
 
     public class Settings : ObservableObject {
+        public static void SetSilentUpdate(Settings obj, bool isEnabled) {
+            obj.isSilentUpdateProperty = isEnabled;
+        }
 
         #region Toolbar
 
-        private double _toolbarZoom = 1.0;
+        private double toolbarZoom = 1.0;
         private bool toolbarStrictInWorkArea = false;
+        private double toolbarOpacity = 1.0;
+
+        private bool isSilentUpdateProperty = false;
 
         /// <summary>
         /// <para>工具栏缩放</para>
@@ -21,11 +27,11 @@ namespace Dubi906w.InkCanvasReborn.Wpf.Models {
         /// </summary>
         [JsonPropertyName("toolbarZoom")]
         public double ToolbarZoom {
-            get => _toolbarZoom;
+            get => toolbarZoom;
             set {
-                if (Math.Abs(_toolbarZoom - value) < 0.00001) return;
-                _toolbarZoom = value;
-                OnPropertyChanged();
+                if (Math.Abs(toolbarZoom - value) < 0.00001) return;
+                toolbarZoom = value;
+                if (!isSilentUpdateProperty) OnPropertyChanged();
             }
         }
 
@@ -38,7 +44,20 @@ namespace Dubi906w.InkCanvasReborn.Wpf.Models {
             set {
                 if (toolbarStrictInWorkArea == value) return;
                 toolbarStrictInWorkArea = value;
-                OnPropertyChanged();
+                if (!isSilentUpdateProperty) OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// 工具栏不透明度
+        /// </summary>
+        [JsonPropertyName("toolbarOpacity")]
+        public double ToolbarOpacity {
+            get => toolbarOpacity;
+            set {
+                if (Math.Abs(toolbarOpacity - value) < 0.00001) return;
+                toolbarOpacity = value;
+                if (!isSilentUpdateProperty) OnPropertyChanged();
             }
         }
 
@@ -55,7 +74,7 @@ namespace Dubi906w.InkCanvasReborn.Wpf.Models {
             set {
                 if (_isEnableEdgeGesturesBlocker == value) return;
                 _isEnableEdgeGesturesBlocker = value;
-                OnPropertyChanged();
+                if (!isSilentUpdateProperty) OnPropertyChanged();
             }
         }
     }

@@ -22,7 +22,6 @@ namespace Dubi906w.InkCanvasReborn.Wpf.Helpers {
             int bottomOverflowed = 0;
             int leftOverflowed = 0;
             int rightOverflowed = 0;
-            Trace.WriteLine(workRect.Left);
 
             // 超出工作区
             if (Math.Abs(h - wh) > 0.0001 || Math.Abs(w - ww) > 0.0001) {

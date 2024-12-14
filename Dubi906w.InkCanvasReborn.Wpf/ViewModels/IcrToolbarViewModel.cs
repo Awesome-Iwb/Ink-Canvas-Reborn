@@ -32,6 +32,8 @@ namespace Dubi906w.InkCanvasReborn.Wpf.ViewModels {
 
         [ObservableProperty] private bool? strictInWorkArea = false;
 
+        [ObservableProperty] private double opacity = 1.00;
+
         /// <summary>
         /// 图标字典，用于工具栏按钮的图标显示
         /// </summary>
@@ -54,7 +56,7 @@ namespace Dubi906w.InkCanvasReborn.Wpf.ViewModels {
         /// </summary>
         [RelayCommand(CanExecute = nameof(CanClearCanvas))]
         private void ClearCanvas() {
-            settings.Settings.IsToolbarStrictInWorkArea = !settings.Settings.IsToolbarStrictInWorkArea;
+            settings.Settings.ToolbarOpacity = 0.5;
         }
 
         public bool CanClearCanvas() {
@@ -64,15 +66,25 @@ namespace Dubi906w.InkCanvasReborn.Wpf.ViewModels {
         private void InitSettings() {
             if (settings == null) return;
 
-            ScalingFactor = 1.35 * settings.Settings.ToolbarZoom;
-            StrictInWorkArea = settings.Settings.IsToolbarStrictInWorkArea;
-
+            LoadSettings();
             settings.Settings.PropertyChanged += (sender, args) => {
                 if (args.PropertyName == nameof(settings.Settings.ToolbarZoom))
                     ScalingFactor = settings.Settings.ToolbarZoom;
                 if (args.PropertyName == nameof(settings.Settings.IsToolbarStrictInWorkArea))
                     StrictInWorkArea = settings.Settings.IsToolbarStrictInWorkArea;
+                if (args.PropertyName == nameof(settings.Settings.ToolbarOpacity))
+                    Opacity = settings.Settings.ToolbarOpacity;
             };
+
+            settings.PropertyChanged += (sender, args) => {
+                if (args.PropertyName == nameof(settings.Settings)) LoadSettings();
+            };
+        }
+
+        private void LoadSettings() {
+            ScalingFactor = 1.35 * settings.Settings.ToolbarZoom;
+            StrictInWorkArea = settings.Settings.IsToolbarStrictInWorkArea;
+            Opacity = settings.Settings.ToolbarOpacity;
         }
 
         public IcrToolbarViewModel(ILoggerFactory factory, SettingsService settings) {

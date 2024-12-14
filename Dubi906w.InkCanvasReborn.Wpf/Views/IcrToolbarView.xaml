@@ -14,7 +14,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid RenderTransformOrigin="0.5,0.5">
+    <Grid RenderTransformOrigin="0.5,0.5" Opacity="{Binding Opacity}">
         <Grid.LayoutTransform>
             <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ScalingFactor}" ScaleY="{Binding ScalingFactor}" />
         </Grid.LayoutTransform>

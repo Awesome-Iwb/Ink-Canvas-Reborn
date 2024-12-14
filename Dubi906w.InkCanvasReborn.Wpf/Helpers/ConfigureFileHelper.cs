@@ -53,6 +53,19 @@ namespace Dubi906w.InkCanvasReborn.Wpf.Helpers {
             }
         }
 
+        public static T ReadConfig<T>(string path) {
+            try {
+                var json = File.ReadAllText(path);
+                var r = JsonSerializer.Deserialize<T>(json);
+                if (r == null)
+                    return Activator.CreateInstance<T>();
+                return r;
+            }
+            catch (Exception ex) {
+                return Activator.CreateInstance<T>();
+            }
+        }
+
         /// <summary>
         /// 保存配置文件，并自动创建备份
         /// </summary>

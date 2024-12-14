@@ -15,7 +15,6 @@ namespace Dubi906w.InkCanvasReborn.Wpf.Views {
     public partial class IcrToolbarWindow : Window {
         private bool isToolbarStrictInScreen = false;
         private readonly SettingsService? settingsService;
-        private int[] winOverflowing = new[] { 0, 0, 0, 0 };
 
         public IcrToolbarWindow(SettingsService? settings) {
             InitializeComponent();
@@ -23,14 +22,14 @@ namespace Dubi906w.InkCanvasReborn.Wpf.Views {
             settingsService = settings;
 
             if (settingsService != null) {
-                isToolbarStrictInScreen = settingsService.Settings.IsToolbarStrictInWorkArea;
-                if (isToolbarStrictInScreen) ReLocateToolbarWindow(Left, Top);
+                LoadSettings();
 
                 settingsService.Settings.PropertyChanged += (sender, args) => {
-                    if (args.PropertyName == nameof(settingsService.Settings.IsToolbarStrictInWorkArea)) {
-                        isToolbarStrictInScreen = settingsService.Settings.IsToolbarStrictInWorkArea;
-                        if (isToolbarStrictInScreen) ReLocateToolbarWindow(Left, Top);
-                    }
+                    if (args.PropertyName == nameof(settingsService.Settings.IsToolbarStrictInWorkArea)) LoadSettings();
+                };
+
+                settingsService.PropertyChanged += (sender, args) => {
+                    if (args.PropertyName == nameof(settings.Settings)) Dispatcher.Invoke(LoadSettings);
                 };
             }
 
@@ -45,17 +44,21 @@ namespace Dubi906w.InkCanvasReborn.Wpf.Views {
             });
         }
 
+        private void LoadSettings() {
+            if (settingsService != null) isToolbarStrictInScreen = settingsService.Settings.IsToolbarStrictInWorkArea;
+            if (isToolbarStrictInScreen) ReLocateToolbarWindow(Left, Top);
+        }
+
         private void OnSizeChanged(object sender, SizeChangedEventArgs e) {
             Task.Run(() => {
                 Task.Delay(50);
-                Dispatcher.InvokeAsync(() => ReLocateToolbarWindow(Left, Top));
+                Dispatcher.InvokeAsync(LoadSettings);
             });
         }
 
         private void ReLocateToolbarWindow(double left, double top) {
             var winRect = new Rect(left, top, Width, Height);
             var overflowing = SystemParameters.WorkArea.IsWithinBoundary(winRect);
-            winOverflowing = overflowing;
 
             // 只有两边超出，如果有三边超出那就不对劲了（屏幕大小无论如何都比窗口大小小或窗口大小太大）（不考虑同侧两边都超出）
             if (overflowing[0] == 1) {
