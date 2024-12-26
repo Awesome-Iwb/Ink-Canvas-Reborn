@@ -81,9 +81,3 @@ A fantastic Ink Canvas in WPF/C#, with fantastic support for Seewo Boards.
 ## ✅ 许可证
 
 GPL-3.0 license
-
----
-
-过去的就过了吧，icc 终究只是过去。 **逗比再也没有了。**
-
-`dubi906w` 指本软件的开发者，和拥有 `逗比的九百有六大不留`、`Doubx690i`、`kriastans` 等称谓的用户与开发者无任何关系，只是故意同名。
