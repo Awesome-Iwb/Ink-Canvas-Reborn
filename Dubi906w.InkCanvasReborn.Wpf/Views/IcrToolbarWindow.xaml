@@ -3,5 +3,5 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" ContentRendered="OnContentRendered"
-        mc:Ignorable="d" Title="IcrToolbarWindow" SizeToContent="WidthAndHeight" SizeChanged="OnSizeChanged"
+        mc:Ignorable="d" Title="IcrToolbarWindow" SizeToContent="WidthAndHeight" SizeChanged="OnSizeChanged" ShowInTaskbar="False"
         WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" />

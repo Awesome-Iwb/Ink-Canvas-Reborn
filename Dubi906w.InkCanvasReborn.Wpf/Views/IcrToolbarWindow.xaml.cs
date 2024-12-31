@@ -9,26 +9,42 @@ using Dubi906w.InkCanvasReborn.Wpf.Helpers;
 using Dubi906w.InkCanvasReborn.Wpf.Services;
 using WindowsDesktop;
 using Rect = System.Windows.Rect;
+using Microsoft.Extensions.Logging;
+using Dubi906w.InkCanvasReborn.Wpf.ViewModels;
 
 namespace Dubi906w.InkCanvasReborn.Wpf.Views {
-
     /// <summary>
     /// IcrToolbarWindow.xaml 的交互逻辑
     /// </summary>
     public partial class IcrToolbarWindow : Window {
         private bool isToolbarStrictInScreen = false;
+        private bool isToolbarWinHiddenFromAltTab = false;
         private readonly SettingsService? settingsService;
+        private bool isToolbarAlwaysPinOnVirtualDesktops = false;
 
-        public IcrToolbarWindow(SettingsService? settings) {
+        private readonly ILoggerFactory? loggerFactory;
+        private ILogger? logger;
+
+        // 此处判断窗口是否已经显示出来，显示出来了才能操作VirtualDesktop。
+        private bool isContentFullyRendered = false;
+
+        public IcrToolbarWindow(SettingsService? settings, ILoggerFactory? factory) {
             InitializeComponent();
 
             settingsService = settings;
+            loggerFactory = factory;
+            // create logger
+            logger = loggerFactory?.CreateLogger<IcrToolbarViewModel>();
+            logger?.Log(LogLevel.Information, "IcrToolbarWindow Created.");
 
             if (settingsService != null) {
                 LoadSettings();
 
                 settingsService.Settings.PropertyChanged += (sender, args) => {
-                    if (args.PropertyName == nameof(settingsService.Settings.IsToolbarStrictInWorkArea)) LoadSettings();
+                    if (args.PropertyName is nameof(settingsService.Settings.IsToolbarStrictInWorkArea)
+                        or nameof(settingsService.Settings.IsToolbarAlwaysPinOnVirtualDesktops)
+                        or nameof(settingsService.Settings.IsToolbarWinHiddenFromAltTab))
+                        LoadSettings();
                 };
 
                 settingsService.PropertyChanged += (sender, args) => {
@@ -48,8 +64,25 @@ namespace Dubi906w.InkCanvasReborn.Wpf.Views {
         }
 
         private void LoadSettings() {
-            if (settingsService != null) isToolbarStrictInScreen = settingsService.Settings.IsToolbarStrictInWorkArea;
-            if (isToolbarStrictInScreen) ReLocateToolbarWindow(Left, Top);
+            if (settingsService != null) {
+                isToolbarStrictInScreen = settingsService.Settings.IsToolbarStrictInWorkArea;
+                isToolbarWinHiddenFromAltTab = settingsService.Settings.IsToolbarWinHiddenFromAltTab;
+                isToolbarAlwaysPinOnVirtualDesktops = settingsService.Settings.IsToolbarAlwaysPinOnVirtualDesktops;
+                if (isToolbarStrictInScreen) ReLocateToolbarWindow(Left, Top);
+                if (isContentFullyRendered) {
+                    switch (isToolbarWinHiddenFromAltTab) {
+                        case false when isToolbarAlwaysPinOnVirtualDesktops:
+                            PinToolbarOnVirtualDesktops(isToolbarAlwaysPinOnVirtualDesktops);
+                            break;
+                        case true when !isToolbarAlwaysPinOnVirtualDesktops:
+                            UpdateAltTabVisibility(isToolbarWinHiddenFromAltTab);
+                            break;
+                    }
+
+                    if (isToolbarWinHiddenFromAltTab && isToolbarAlwaysPinOnVirtualDesktops)
+                        AlertAltTabHHiddenAndVirtualDesktopsConflict();
+                }
+            }
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e) {
@@ -81,8 +114,40 @@ namespace Dubi906w.InkCanvasReborn.Wpf.Views {
             }
         }
 
+        private void PinToolbarOnVirtualDesktops(bool isPinned) {
+            if (!this.IsWindowVisibleInTaskView()) {
+                this.SetAltTabWinVisibility(true);
+            }
+
+            if (isPinned) {
+                VirtualDesktop.PinWindow(new WindowInteropHelper(this).Handle);
+            } else {
+                VirtualDesktop.UnpinWindow(new WindowInteropHelper(this).Handle);
+            }
+        }
+
         private void OnContentRendered(object sender, EventArgs e) {
-            VirtualDesktop.PinWindow(new WindowInteropHelper(this).Handle);
+            isContentFullyRendered = true;
+            switch (isToolbarWinHiddenFromAltTab) {
+                case false when isToolbarAlwaysPinOnVirtualDesktops:
+                    PinToolbarOnVirtualDesktops(isToolbarAlwaysPinOnVirtualDesktops);
+                    break;
+                case true when !isToolbarAlwaysPinOnVirtualDesktops:
+                    UpdateAltTabVisibility(isToolbarWinHiddenFromAltTab);
+                    break;
+            }
+
+            if (isToolbarWinHiddenFromAltTab && isToolbarAlwaysPinOnVirtualDesktops)
+                AlertAltTabHHiddenAndVirtualDesktopsConflict();
+        }
+
+        private void AlertAltTabHHiddenAndVirtualDesktopsConflict() {
+            logger?.Log(LogLevel.Warning,
+                "配置文件中的 toolbarWindowHiddenFromAltTab 和 toolbarAlwaysPinOnVirtualDesktops 同时开启会产生冲突，因此已经忽略这两个选项。请确保只有其中一个选项开启！");
+        }
+
+        private void UpdateAltTabVisibility(bool isHidden) {
+            this.SetAltTabWinVisibility(!isHidden);
         }
     }
 

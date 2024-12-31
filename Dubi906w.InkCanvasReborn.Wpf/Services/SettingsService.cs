@@ -65,6 +65,7 @@ namespace Dubi906w.InkCanvasReborn.Wpf.Services {
                     _settings = ConfigureFileHelper.LoadConfig<Settings>("./Settings.json");
                 } else {
                     _logger?.LogInformation("Configuration file not found, initializing new settings...");
+                    SaveSettings();
                 }
 
                 Settings.PropertyChanged += OnSettingsPropertyChanged;

@@ -17,7 +17,10 @@ namespace Dubi906w.InkCanvasReborn.Wpf.Models {
 
         private double toolbarZoom = 1.0;
         private bool toolbarStrictInWorkArea = false;
+        private bool toolbarAlwaysPinOnVirtualDesktops = false;
         private double toolbarOpacity = 1.0;
+        private bool toolbarWinHiddenFromAltTab = false;
+        private bool toolbarTopMost = true;
 
         private bool isSilentUpdateProperty = false;
 
@@ -44,6 +47,45 @@ namespace Dubi906w.InkCanvasReborn.Wpf.Models {
             set {
                 if (toolbarStrictInWorkArea == value) return;
                 toolbarStrictInWorkArea = value;
+                if (!isSilentUpdateProperty) OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// 让工具栏固定显示在每一个虚拟桌面上。
+        /// </summary>
+        [JsonPropertyName("toolbarAlwaysPinOnVirtualDesktops")]
+        public bool IsToolbarAlwaysPinOnVirtualDesktops {
+            get => toolbarAlwaysPinOnVirtualDesktops;
+            set {
+                if (toolbarAlwaysPinOnVirtualDesktops == value) return;
+                toolbarAlwaysPinOnVirtualDesktops = value;
+                if (!isSilentUpdateProperty) OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// 工具栏置顶显示，包括强制置顶和UIAccess软置顶。
+        /// </summary>
+        [JsonPropertyName("toolbarTopMost")]
+        public bool IsToolbarTopMost {
+            get => toolbarTopMost;
+            set {
+                if (toolbarTopMost == value) return;
+                toolbarTopMost = value;
+                if (!isSilentUpdateProperty) OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// 让工具栏从AltTab菜单中消失
+        /// </summary>
+        [JsonPropertyName("toolbarWindowHiddenFromAltTab")]
+        public bool IsToolbarWinHiddenFromAltTab {
+            get => toolbarWinHiddenFromAltTab;
+            set {
+                if (toolbarWinHiddenFromAltTab == value) return;
+                toolbarWinHiddenFromAltTab = value;
                 if (!isSilentUpdateProperty) OnPropertyChanged();
             }
         }
